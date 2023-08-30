@@ -62,7 +62,7 @@ for n in n_values:
     generated_lyrics += generate_lyrics(starting_ngram, freq_dist, 200)
 
 # Use GPT-3.5 API
-openai.api_key = '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'
+openai.api_key = '<INSERT_API_KEY_HERE>'
 
 response = openai.Completion.create(
   engine="text-davinci-003",
