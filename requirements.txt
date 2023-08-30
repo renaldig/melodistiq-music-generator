@@ -1,0 +1,9 @@
+pandas
+nltk
+openai
+pronouncing
+regex
+mingus
+contractions
+fpdf2
+fasttext
