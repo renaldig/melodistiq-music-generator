@@ -1,0 +1,1 @@
+{ \"Records\": [{\"s3\": {\"bucket\": {\"name\": \"newobjectdetectionbucket\"}, \"object\": {\"key\": \"train2017.zip\"}}}] } 

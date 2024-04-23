@@ -1,6 +1,6 @@
 pandas
 nltk
-openai
+openai==0.27.2
 pronouncing
 regex
 mingus

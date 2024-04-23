@@ -7,6 +7,7 @@ from nltk.tokenize import word_tokenize
 import openai
 import pronouncing
 import re
+import os
 from mingus.containers import Note
 from mingus.containers import Bar
 from mingus.containers import Track
@@ -23,6 +24,7 @@ fasttext.util.download_model('en', if_exists='ignore')
 ft = fasttext.load_model('cc.en.300.bin')
 
 nltk.download('cmudict')
+nltk.download('punkt')
 from nltk.corpus import cmudict
 d = cmudict.dict()
 
@@ -62,15 +64,21 @@ for n in n_values:
     generated_lyrics += generate_lyrics(starting_ngram, freq_dist, 200)
 
 # Use GPT-3.5 API
-openai.api_key = '<INSERT_API_KEY_HERE>'
+openai.api_key = os.getenv('openai_api_key')
+conversations = {}
+session_id=0;
+conversations[session_id] = []
 
-response = openai.Completion.create(
-  engine="text-davinci-003",
-  prompt=generated_lyrics,
+conversations[session_id].append({"role": "system", "content": "You are a helpful assistant who will transform the lyrics below into a song."})
+conversations[session_id].append({"role": "user", "content": generated_lyrics})
+
+response = openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=conversations[session_id],
   max_tokens=200
 )
 
-gpt_lyrics = response.choices[0].text.strip()
+gpt_lyrics = response.choices[0]["message"]["content"].strip()
 
 def find_similar_word(word):
     # Get the 10 most similar words to the given word
@@ -144,11 +152,13 @@ def generate_melody(lyrics):
                 if similar_word:
                     return get_stress(similar_word)
                 else:
-                    return [[0, 1, 2]]  # Use default pattern if no similar word is found
+                    # Use default pattern if no similar word is found
+                    return [[0, 1, 2]]
 
     # Get the stress pattern of the lyrics
     for word in fixed_tokens:
-        word = re.sub(r'[^\w\s]', '', word)  # remove punctuation
+        # remove punctuation
+        word = re.sub(r'[^\w\s]', '', word)
         stress_pattern += get_stress(word)
 
     # Flatten the stress_pattern list
