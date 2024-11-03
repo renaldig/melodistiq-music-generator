@@ -63,17 +63,17 @@ for n in n_values:
     starting_ngram = random.choice(list(freq_dist.keys()))
     generated_lyrics += generate_lyrics(starting_ngram, freq_dist, 200)
 
-# Use GPT-3.5 API
+# Use GPT-4o API
 openai.api_key = os.getenv('openai_api_key')
 conversations = {}
-session_id=0;
+session_id=0
 conversations[session_id] = []
 
 conversations[session_id].append({"role": "system", "content": "You are a helpful assistant who will transform the lyrics below into a song."})
 conversations[session_id].append({"role": "user", "content": generated_lyrics})
 
 response = openai.ChatCompletion.create(
-  model="gpt-3.5-turbo",
+  model="gpt-4o",
   messages=conversations[session_id],
   max_tokens=200
 )
